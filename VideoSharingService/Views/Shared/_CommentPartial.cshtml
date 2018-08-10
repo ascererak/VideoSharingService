@@ -1,0 +1,11 @@
+﻿@model VideoSharingService.Models.VideoCommentViewModel
+
+<div>
+    @using (Html.BeginForm("Comment", "User", FormMethod.Post))
+    {
+        @Html.TextAreaFor(m => m.Comment.CommentText, new { @class = "form-control margin-top", placeholder = Resources.GlobalRes.Comment })
+        @Html.HiddenFor(m => m.Video.ID)
+        @Html.HiddenFor(m => m.Video.PublishDate)
+        <input type="submit" class="btn btn-primary" id="commentBtnSubmit" value="@Resources.GlobalRes.ToComment" />
+    }
+</div>

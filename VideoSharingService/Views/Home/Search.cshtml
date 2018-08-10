@@ -1,0 +1,47 @@
+﻿@model IEnumerable<VideoSharingService.Data.Users.AuthorizedUser>
+
+@{ 
+    ViewBag.Title = Resources.GlobalRes.Search;
+}
+
+<div class="row margin-top">
+    @if (Model.Count() == 0)
+    {
+        <h3>@Resources.GlobalRes.FoundNothing @ViewBag.SearchString</h3>
+        <div class="empty-block"></div>
+    }
+    else
+    {
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>@Resources.GlobalRes.User</th>
+                    <th>@Resources.GlobalRes.Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td class="text-center">
+                            @Html.ActionLink(user.FirstName + " " + user.LastName, "UserPage", "User", new { userId = user.Id }, new { @class = "nav-link" })
+                        </td>
+                        <td class="text-center">
+                            @using (Html.BeginForm("SubscribeUnsubscribe", "User", new { userId = user.Id }, FormMethod.Post, new { }))
+                            {
+                                if (ViewBag.AreFriends[user.Id])
+                                {
+                                    <input type="submit" class="btn btn-danger text-center" value="@Resources.GlobalRes.Unsubscribe" />
+                                }
+                                else
+                                {
+                                    <input type="submit" class="btn btn-success text-center" value="@Resources.GlobalRes.Subscribe" />
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

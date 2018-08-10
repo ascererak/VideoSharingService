@@ -1,0 +1,72 @@
+﻿@model IEnumerable<VideoSharingService.Data.Video>
+
+@{ 
+    ViewBag.Title = Resources.GlobalRes.Posts;
+}
+
+<div class="margin-top">
+    <h3>@ViewBag.Title</h3>
+    <table class="table table-bordered table-striped margin-top">
+        <thead>
+            <tr>
+                <th>@Html.ActionLink("Id", "SortById", "User", new { enctype = "multipart/form-data" })</th>
+                <th>@Resources.GlobalRes.DescriptionPlaceholder</th>
+                <th>@Html.ActionLink(Resources.GlobalRes.Author, "SortByAuthor", "User", new { enctype = "multipart/form-data" })</th>
+                <th>@Html.ActionLink(Resources.GlobalRes.PublishDate, "SortByDate", "User", new { enctype = "multipart/form-data" })</th>
+                <th colspan="2">@Resources.GlobalRes.Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var video in Model)
+            {
+                <tr>
+                    <td>@video.ID</td>
+                    <td>
+                        @if (video.Description != null && video.Description.Count() > 15)
+                        {
+                            <div>
+                                @video.Description.Substring(0, 15)<p>...</p>
+                            </div>
+                        }
+                        else
+                        {
+                            var str = video.Description ?? "";
+                            @str
+                        }
+                    </td>
+                    <td>@Html.ActionLink(video.Author.FirstName + " " + video.Author.LastName, "UserPage", "User", new { }, new { })</td>
+                    <td>@video.PublishDate</td>
+                    <td class="text-center">@Html.ActionLink(Resources.GlobalRes.Details, "Details", "Home", new { videoId = video.ID, authorId = video.Author.Id }, new { @class = "btn btn-primary detailsModal", id = "", enctype = "multipart/form-data" })</td>
+                    <td class="text-center">
+                        @using (Html.BeginForm("DeleteVideo", "User", new { videoId = video.ID }, FormMethod.Post))
+                        {
+                            <input type="submit" class="btn btn-danger" value="@Resources.GlobalRes.Delete" />
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(function () {
+            $.ajaxSetup({ cache: false });
+            $(".detailsModal").click(function (e) {
+
+                e.preventDefault();
+                $.get(this.href, function (data) {
+                    $('#dialogContent').html(data);
+                    $('#modDialog').modal('show');
+                });
+            });
+        })
+    </script>
+}

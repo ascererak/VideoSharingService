@@ -1,0 +1,175 @@
+﻿@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+body {
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+.navbar-collapse.collapse.in {
+    display: block !important;
+}
+
+.round_img {
+    border-radius: 50%;
+    overflow: hidden;
+    width: 38px;
+    height: 38px;
+    margin-top: 3%;
+}
+
+.video_template {
+    margin-top: 3%;
+    border-radius: 10px;
+    border-style: solid;
+    width: 70%;
+}
+
+a.remove {
+    text-decoration: none;
+}
+
+    a.remove:hover {
+        color: blue;
+    }
+
+.delete-comment-form {
+    float: right;
+    text-decoration: none;
+    margin: 2%
+}
+
+.delete-comment-submit {
+    background: none;
+    border: none;
+    cursor: pointer
+}
+
+.margin-top {
+    margin-top: 3%;
+}
+
+.empty-block {
+    margin-bottom: 63%;
+}
+
+.video_author {
+    margin:3%;
+}
+
+.fields-max-width {
+    max-width: 280px;
+}
+
+.outer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#descriptionBtnSubmit {
+    float: right;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#publishDateParagraph {
+    margin-top: 5px;
+}
+
+#commentAuthor {
+    margin-top: 3%;
+    margin-left: 3%;
+}
+
+#commentText {
+    margin-left: 5%;
+}
+
+#commentBtnSubmit {
+    float: right;
+    margin-top: 5px;
+}
+
+.detailsModal {
+    max-width: 700px;
+}
+
+#homePagePadding {
+    padding-top: 8%;
+}
+
+#loadingImg {
+    width: 64px;
+    height: 64px;
+}
+
+#searchField {
+    width: 800px;
+}
+
+#logoLink {
+    max-height: 38px;
+    max-width: 50px;
+}
+
+#publishTextArea {
+    width: 70%;
+}
+
+#deleteVideoBtn {
+    float: right;
+    text-decoration: none;
+    margin: 2%;
+}
+
+#videoPostDescrDiv {
+    margin-left: 3%;
+    margin-top: 2%;
+}
+
+#videoPostDescr {
+    margin-right: 1%;
+}
+
+#videoPostDetailsOpener {
+    float: right;
+    margin: 2%;
+}
+
+#videoPostAuthor {
+    margin-top: 20px;
+}
+
+#advancedSearchField {
+    width: 500px;
+}
+
+#userPage {
+    float: left;
+    width: 15%;
+    margin-top: 2%;
+    margin-left: 6%;
+}
+
+#profileImage {
+    width: 200px;
+    height: 280px;
+    overflow: hidden;
+}
+
+#userPageName {
+    margin-top: 5px;
+    margin-left: 10px;
+}

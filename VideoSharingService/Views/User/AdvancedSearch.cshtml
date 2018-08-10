@@ -1,0 +1,76 @@
+﻿@model VideoSharingService.Models.AdvancedSearchViewModel
+
+@{
+    ViewBag.Title = Resources.GlobalRes.AdvancedSearch;
+}
+
+@using (Html.BeginForm("AdvancedSearch", "User", FormMethod.Post, new { @class = "form-inline", style = "margin-top:5%" }))
+{
+    <input class="form-control col-lg-9 mr-sm-2 bg-light text-dark" id="advancedSearchField" name="searchString" type="search" placeholder="@Resources.GlobalRes.Search" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0 btn-outline-dark" type="submit">@Resources.GlobalRes.Search</button>
+    <div>
+        @Resources.GlobalRes.SearchIn <br />
+        @Resources.GlobalRes.Users @Html.RadioButton("keyword", "users", true)
+        @Resources.GlobalRes.Descriptions @Html.RadioButton("keyword", "descriptions")
+        @Resources.GlobalRes.Comments @Html.RadioButton("keyword", "comments")
+    </div>
+}
+
+@if (Model != null)
+{
+    if (Model.Users != null)
+    {
+        if (Model.Users.Count() == 0)
+        {
+            <h4>@Resources.GlobalRes.FoundNothing @ViewBag.SearchString</h4>
+        }
+        else
+        {
+            @Html.Partial("UserList", Model.Users)
+        }
+    }
+    else if (Model.Videos != null)
+    {
+        if (Model.Videos.Count() == 0)
+        {
+            <h4>@Resources.GlobalRes.FoundNothing @ViewBag.SearchString</h4>
+        }
+        else
+        {
+            @Html.Partial("PostsList", Model.Videos)
+        }
+    }
+    else if (Model.Comments != null)
+    {
+        if (Model.Comments.Count() == 0)
+        {
+            <h4>@Resources.GlobalRes.FoundNothing @ViewBag.SearchString</h4>
+        }
+        else
+        {
+            @Html.Partial("CommentList", Model.Comments)
+        }
+    }
+}
+
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(function () {
+            $.ajaxSetup({ cache: false });
+            $(".detailsModal").click(function (e) {
+
+                e.preventDefault();
+                $.get(this.href, function (data) {
+                    $('#dialogContent').html(data);
+                    $('#modDialog').modal('show');
+                });
+            });
+        })
+    </script>
+}

@@ -1,0 +1,95 @@
+﻿@using VideoSharingService.Models
+@model IEnumerable<VideoSharingService.Data.Video>
+
+@{
+    ViewBag.Title = Resources.GlobalRes.Home;
+}
+
+@if (!Request.IsAuthenticated)
+{
+    <div class="jumbotron">
+        <h1>@Resources.GlobalRes.HomePageGreetings</h1>
+        <p class="lead">@Resources.GlobalRes.HomePageParagraph</p>
+        @Html.Partial("_LoginFormPartial", new LoginViewModel())
+    </div>
+
+    <div id="homePagePadding"></div>
+}
+else
+{
+    <div>
+        @Html.Partial("_PublishPartial", new UserPageViewModel())
+        <div id="scrolList">
+            @Html.Partial("_Items")
+        </div>
+        <div id="loading" class="text-center">
+            <img id="loadingImg" src="@Url.Content("~/Content/loading.gif")" />
+        </div>
+    </div>
+    <div id="modDialog" class="modal fade">
+        <div id="dialogContent" class="modal-dialog detailsModal"></div>
+    </div>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var area = document.getElementById('urlArea');
+            area.style.width = document.getElementById('formInline').offsetWidth - (document.getElementById('pubBtn').offsetWidth + 10) + "px";
+        });
+
+        $(function () {
+            $.ajaxSetup({ cache: false });
+            $(".compItem").click(function (e) {
+
+                e.preventDefault();
+                $.get(this.href, function (data) {
+                    $('#dialogContent').html(data);
+                    $('#modDialog').modal('show');
+                });
+            });
+
+            $('div#loading').hide();
+
+            var page = 0;
+            var _inCallback = false;
+            window.loadItems = function () {
+                if (page > -1 && !_inCallback) {
+                    _inCallback = true;
+                    page++;
+                    $('div#loading').show();
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/Home/Index/' + page,
+                        success: function (data, textstatus) {
+                            if (data != '') {
+                                $("#scrolList").append(data);
+                                $(".compItem").click(function (e) {
+
+                                    e.preventDefault();
+                                    $.get(this.href, function (data) {
+                                        $('#dialogContent').html(data);
+                                        $('#modDialog').modal('show');
+                                    });
+                                });
+                            }
+                            else {
+                                page = -1;
+                            }
+                            _inCallback = false;
+                            $("div#loading").hide();
+                        }
+                    });
+                }
+            }
+            // scrolling event handling
+            $(window).scroll(function () {
+                if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+                    loadItems();
+                }
+            });
+        })
+    </script>
+}

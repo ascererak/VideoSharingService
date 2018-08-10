@@ -1,0 +1,51 @@
+﻿@model VideoSharingService.Data.Video
+@using VideoSharingService.Models
+@using Microsoft.AspNet.Identity
+
+<div class="modal-content">
+    <div class="modal-header">
+        @Html.ActionLink(Model.Author.FirstName + " " + Model.Author.LastName, "UserPage", "User", new { userId = Model.Author.Id }, new { @class = "video_author" })
+        <button class="close" data-dismiss="modal" area-hidden="true">&times;</button>
+    </div>
+    <div class="modal-body">
+        <div class="col-sm-12" align="center">
+            <iframe style="width:99%;" height="315" src="@Model.Url" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+        <div>
+            @if (Model.Author.Id == User.Identity.GetUserId() || new AdminInfoViewModel().IsAdmin(User.Identity.GetUserId()))
+            {
+                using (Html.BeginForm("EditDescription", "User",
+                  new { videoId = Model.ID, description = Model.Description }, FormMethod.Post))
+                {
+                    @Html.TextAreaFor(m => m.Description, new { @class = "form-control", value = Model.Description });
+                    <input type="submit" class="btn btn-success" id="descriptionBtnSubmit" value="@Resources.GlobalRes.SaveChanges" />
+                }
+            }
+            else
+            {
+                Html.DisplayFor(m => m.Description);
+            }
+            <p id="publishDateParagraph">@Resources.GlobalRes.PublishDate: <strong>@Model.PublishDate.ToShortDateString()</strong></p>
+        </div>
+        @Html.Partial("_CommentPartial", new VideoCommentViewModel() { Video = Model })
+        <br />
+        <br />
+        <div class="margin-top">
+            @foreach (var comment in Model.Comments)
+            {
+                if (comment.Author.Id == User.Identity.GetUserId() || new AdminInfoViewModel().IsAdmin(User.Identity.GetUserId()))
+                {
+                    using (Html.BeginForm("DeleteComment", "User", new { commentId = comment.ID }, FormMethod.Post,
+                        new { @class = "text-danger delete-comment-form", id = "myForm" }))
+                    {
+                        <input type="submit" class="text-danger remove delete-comment-submit" value="&#x274C;" />
+                    }
+                }
+                @Html.ActionLink(comment.Author.FirstName + " " + comment.Author.LastName, "UserPage", "User",
+                    new { userId = comment.Author.Id }, new { id="commentAuthor" })
+                <p id="commentText">@comment.CommentText</p>
+                <hr />
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,6 @@
+﻿@model IEnumerable<VideoSharingService.Data.Video>
+
+@foreach (var video in Model)
+{
+    @Html.Partial("VideoPostTemplate", video)
+}

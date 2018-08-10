@@ -1,0 +1,19 @@
+﻿@if (Request.IsAuthenticated)
+{
+    <li>
+        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <a href="javascript:document.getElementById('logoutForm').submit()" class="nav-link">@Resources.GlobalRes.LogOut</a>
+        }
+    </li>
+}
+else
+{
+    <li>
+        @Html.ActionLink(Resources.GlobalRes.Registration, "Register", "Account", new { model = Model }, new { @class = "nav-link" })
+    </li>
+    <li>
+        @Html.ActionLink(Resources.GlobalRes.Login, "Login", "Account", null, new { @class = "nav-link" })
+    </li>
+}

@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
+        <button class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a href="@Url.Action("Index", "Home")" class="navbar-brand">
+            <img src="@Url.Content("~/Content/logo.png")" id="logoLink" />
+            Video Sharing
+        </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <ul class="navbar-nav mr-auto">
+                @Html.Partial("_AuthorizedUserPartial")
+            </ul>
+            @Html.Partial("_AuthorizedUserSearchPartial")
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    @Html.ActionLink("RU", "ChangeCulture", "Home", new { lang = "ru" }, new { @class = "nav-link" })
+                </li>
+                <li>
+                    @Html.ActionLink("EN", "ChangeCulture", "Home", new { lang = "en" }, new { @class = "nav-link" })
+                </li>
+                @Html.Partial("_LoginPartial")
+            </ul>
+        </div>
+    </nav>
+
+    <div>
+        @RenderBody()
+        <footer class="container">
+            <hr style="clear:left; margin-top: 3px" />
+            <span>
+                @Html.ActionLink(Resources.GlobalRes.AboutSystem, "AboutSystem", "Home") |
+                @Html.ActionLink(Resources.GlobalRes.TermsOfService, "TermsOfService", "Home")
+            </span>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

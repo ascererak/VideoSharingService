@@ -1,0 +1,32 @@
+﻿@using Microsoft.AspNet.Identity
+@using VideoSharingService.Models
+@model VideoSharingService.Data.Video
+
+@if (Model.Author != null)
+{
+    <div class="outer">
+        <div class="video_template">
+            @if (Model.Author.Id == User.Identity.GetUserId() || new AdminInfoViewModel().IsAdmin(User.Identity.GetUserId()))
+            {
+                using (Html.BeginForm("DeleteVideo", "User", new { videoId = Model.ID }, FormMethod.Post, new { @class = "text-danger", id = "deleteVideoBtn" }))
+                {
+                    <input type="submit" class="btn btn-danger" value="@Resources.GlobalRes.Delete" />
+                }
+            }
+            <h5 id="videoPostAuthor">
+                @Html.ActionLink(Model.Author.FirstName + " " + Model.Author.LastName,
+       "UserPage", "User",
+       new { userId = Model.Author.Id },
+       new { @class = "video_author" })
+            </h5>
+            <br />
+            <div class="text-center">
+                <iframe style="width:95%;" height="400" src="@Model.Url" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+            <div id="videoPostDescrDiv">
+                <p id="videoPostDescr"><strong>@Model.Description</strong></p>
+                <h6>@Html.ActionLink(Resources.GlobalRes.Details, "Details", "Home", new { videoId = Model.ID }, new { @class = "compItem", id = "videoPostDetailsOpener" })</h6>
+            </div>
+        </div>
+    </div>
+}

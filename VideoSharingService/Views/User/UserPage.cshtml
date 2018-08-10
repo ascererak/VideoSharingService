@@ -1,0 +1,135 @@
+﻿@using Microsoft.AspNet.Identity
+@using VideoSharingService.Models
+@model UserPageViewModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutUserPage.cshtml";
+    ViewBag.Title = Resources.GlobalRes.UserPage;
+}
+
+    <div id="userPage">
+        <img id="profileImage" src="@Model.User.ProfileImagePath" alt="@Resources.GlobalRes.ProfileImage"/>
+        <h5 id="userPageName">@Model.User.FirstName @Model.User.LastName</h5>
+        @if (Model.User.Id != User.Identity.GetUserId())
+        {
+            using (Html.BeginForm("SubscribeUnsubscribe", "User", new { userId = Model.User.Id }, FormMethod.Post, new { @class = "btn btn-default", role = "form" }))
+            {
+                if (Model.IsFriend)
+                {
+                    <input type="submit" class="btn btn-default" value="Unsubscribe" />
+                }
+                else
+                {
+                    <input type="submit" class="btn btn-default" value="Subscribe" />
+                }
+            }
+        }
+        @if (Model.User.Id == User.Identity.GetUserId() || new AdminInfoViewModel().IsAdmin(User.Identity.GetUserId()))
+        {
+            <div class="dropdown">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    @Resources.GlobalRes.Settings
+                </button>
+                <div class="dropdown-menu">
+                    @Html.ActionLink(Resources.GlobalRes.ChangePassword, "ChangePassword", "Manage", new { }, new { @class = "dropdown-item" })
+                    <a href="#" onclick="ShowPhotoChange()" class="dropdown-item">@Resources.GlobalRes.ChangePhoto</a>
+                </div>
+            </div>
+            using (Html.BeginForm("ChangePhoto", "Manage", new { userId = Model.User.Id }, FormMethod.Post, 
+                new { id = "changePhotoForm", style = "display:none;", enctype = "multipart/form-data" }))
+            {
+                <div class="form-group">
+                    <input type="file" name="upload" class="btn btn-default" /><br>
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-default" value="@Resources.GlobalRes.ChangePhoto" />
+                </div>
+            }
+        }
+    </div>
+
+    <div class="container" style="float:left;">
+        @if (Model.User.Id == User.Identity.GetUserId())
+        {
+            @Html.Partial("_PublishPartial", Model)
+        }
+
+        <div id="scrolList">
+            @Html.Partial("_Items", Model.Videos)
+        </div>
+        <div id="loading" class="text-center">
+            <img id="loadingImg" src="@Url.Content("~/Content/loading.gif")" />
+        </div>
+
+    </div>
+
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog detailsModal"></div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var area = document.getElementById('urlArea');
+            area.style.width = document.getElementById('formInline').offsetWidth - (document.getElementById('pubBtn').offsetWidth + 10) + "px";
+        });
+        $(function () {
+            $.ajaxSetup({ cache: false });
+            $(".compItem").click(function (e) {
+
+                e.preventDefault();
+                $.get(this.href, function (data) {
+                    $('#dialogContent').html(data);
+                    $('#modDialog').modal('show');
+                });
+            });
+
+            $('div#loading').hide();
+
+            var page = 0;
+            var _inCallback = false;
+            window.loadItems = function () {
+                if (page > -1 && !_inCallback) {
+                    _inCallback = true;
+                    page++;
+                    $('div#loading').show();
+
+                    $.ajax({
+                        type: 'GET',
+                        url: '/User/UserPage?userId=' + '@Model.User.Id' + '&id=' + page,
+                        success: function (data, textstatus) {
+                            if (data != '') {
+                                $("#scrolList").append(data);
+                                $(".compItem").click(function (e) {
+
+                                    e.preventDefault();
+                                    $.get(this.href, function (data) {
+                                        $('#dialogContent').html(data);
+                                        $('#modDialog').modal('show');
+                                    });
+                                });
+                            }
+                            else {
+                                page = -1;
+                            }
+                            _inCallback = false;
+                            $("div#loading").hide();
+                        }
+                    });
+                }
+            }
+            // Scroll event handling
+            $(window).scroll(function () {
+                if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+                    loadItems();
+                }
+            });
+        })
+
+        function ShowPhotoChange() {
+            var form = document.getElementById('changePhotoForm');
+            form.style.display = 'block';
+        }
+    </script>
+}

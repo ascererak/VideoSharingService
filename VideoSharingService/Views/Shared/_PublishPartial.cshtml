@@ -1,0 +1,40 @@
+﻿@model VideoSharingService.Models.UserPageViewModel
+
+
+@using (Html.BeginForm("PostVideo", "User", new { }, FormMethod.Post,  new { @class = "margin-top" }))
+{
+    <div class="outer">
+        @Html.AntiForgeryToken()
+
+        <div id="publishTextArea">
+            <div class="form-inline" id="formInline">
+                @Html.TextAreaFor(m => m.Url, new { @class = "form-control mb-2 mr-sm-2 mb-sm-0", placeholder = Resources.GlobalRes.YoutubeUrlPlaceholder, id = "urlArea" })
+                @Html.HiddenFor(m => m.User.Id)
+                <a href="#" id ="pubBtn" class="btn btn-primary" data-toggle="modal" data-target="#myModal">@Resources.GlobalRes.Publish</a>
+            </div>
+            @Html.ValidationMessageFor(m => m.Url, "", new { @class = "text-danger" })
+            <div class="modal fade" id="myModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">@Resources.GlobalRes.AddDescription</h3>
+                            <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        </div>
+                        <div class="modal-body">
+                            @Html.TextAreaFor(m => m.Description, new { @class = "form-control", placeholder = Resources.GlobalRes.DescriptionPlaceholder, maxlength = "255" })
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" class="btn btn-default" data-dismiss="modal">@Resources.GlobalRes.Cancel</a>
+                            <input type="submit" class="btn btn-primary" value="@Resources.GlobalRes.Publish" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

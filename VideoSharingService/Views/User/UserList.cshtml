@@ -1,0 +1,34 @@
+﻿@model IEnumerable<VideoSharingService.Data.Users.AuthorizedUser>
+
+@{ 
+    ViewBag.Title = Resources.GlobalRes.Users;
+}
+
+<div class="margin-top">
+    <h3>@ViewBag.Title</h3>
+    <table class="table table-bordered table-striped margin-top">
+        <thead>
+            <tr>
+                <th>@Html.ActionLink(Resources.GlobalRes.FirstName, "SortByFirstName", "User", new { users = Model }, new { enctype = "multipart/form-data" })</th>
+                <th>@Html.ActionLink(Resources.GlobalRes.LastName, "SortByLastName", "User", new { users = Model }, new { enctype = "multipart/form-data" })</th>
+                <th colspan="2">@Resources.GlobalRes.Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.FirstName</td>
+                    <td>@user.LastName</td>
+                    <td class="text-center">@Html.ActionLink(Resources.GlobalRes.Details, "UserPage", "User", new { userId = user.Id }, new { @class = "btn btn-primary" })</td>
+                    <td class="text-center">
+                        @using (Html.BeginForm("DeleteUser", "Manage", new { userId = user.Id }, FormMethod.Post))
+                        {
+                            <input type="submit" class="btn btn-danger" value="@Resources.GlobalRes.Delete" />
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,56 @@
+﻿@model IEnumerable<VideoSharingService.Data.Comment>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>@Html.ActionLink("Id", "SortByCommentId", "User", new { users = Model }, new { enctype = "multipart/form-data" })</th>
+            <th>@Resources.GlobalRes.Comment</th>
+            <th>@Html.ActionLink(Resources.GlobalRes.Author, "SortByCommentAuthor", "User", new { users = Model }, new { enctype = "multipart/form-data" })</th>
+            <th>@Resources.GlobalRes.Post</th>
+            <th>@Resources.GlobalRes.Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var comment in Model)
+        {
+            <tr>
+                <td>@comment.ID</td>
+                <td>
+                    @if (comment.CommentText != null)
+                    {
+                        if (comment.CommentText.Count() > 15)
+                        {
+                            @comment.CommentText.Substring(0, 15)<p>...</p>
+                        }
+                        else
+                        {
+                            @comment.CommentText
+                        }
+                    }
+                </td>
+                <td>@Html.ActionLink(comment.Author.FirstName + " " + comment.Author.LastName, "UserPage", "User", new { }, new { })</td>
+                <td class="text-center">
+                    @Html.ActionLink(
+                        Resources.GlobalRes.Post,
+                        "Details",
+                        "Home",
+                        new
+                        {
+                            videoId = comment.Video.ID,
+                            authorId = comment.Video.Author.Id
+                        },
+                        new
+                        {
+                            @class = "btn btn-primary detailsModal", enctype = "multipart/form-data"
+                        })
+                </td>
+                <td class="text-center">
+                    @using (Html.BeginForm("DeleteComment", "User", new { commentId = comment.ID }, FormMethod.Post))
+                    {
+                        <input type="submit" class="btn btn-danger" value="Delete" />
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

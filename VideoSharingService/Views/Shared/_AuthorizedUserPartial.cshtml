@@ -1,0 +1,25 @@
+﻿@using Microsoft.AspNet.Identity
+@using VideoSharingService.Models
+
+
+@if (Request.IsAuthenticated)
+{
+    <li class="nav-item">
+        @Html.ActionLink(Resources.GlobalRes.Account, "UserPage", "User", new { userId = User.Identity.GetUserId() }, new { @class = "nav-link" })
+    </li>
+    <li class="nav-item">
+        @Html.ActionLink(Resources.GlobalRes.Friends, "Friends", "User", new { }, new { @class = "nav-link" })
+    </li>
+
+    if (new AdminInfoViewModel().IsAdmin(User.Identity.GetUserId()))
+    {
+        <li class="nav-item dropdown">
+            <a href="@Url.Action("", "")" class="nav-link dropdown-toggle" data-toggle="dropdown">@Resources.GlobalRes.AdminPanel<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                <li>@Html.ActionLink(Resources.GlobalRes.Users, "UserList", "User", new { Model = Model }, new { @class = "dropdown-item" })</li>
+                <li>@Html.ActionLink(Resources.GlobalRes.Posts, "PostsList", "User", new { Model = Model }, new { @class = "dropdown-item" })</li>
+                <li>@Html.ActionLink(Resources.GlobalRes.AdvancedSearch, "AdvancedSearch", "User", new { Model = Model }, new { @class = "dropdown-item" })</li>
+            </ul>
+        </li>
+    }
+}
